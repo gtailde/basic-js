@@ -29,7 +29,7 @@ function encodeLine(str) {
       ret+= arr[i+1] + arr[i];
     };
   };
-  return ret.replaceAll(1, '');
+  return String(ret.replaceAll(1, ''));
 };
 
 module.exports = {

@@ -14,52 +14,36 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
  function transform(arr) {
-    let mass = [];
-    function find (arr){
-        let result = [];
-        if(arr.includes('--discard-next') || result.includes('--discard-next')){ 
-            let index = arr.indexOf('--discard-next');
-            for(let i = 0; i < arr.length; i++){
-                if(i != index && i != index + 1){result.push(arr[i])};
+    if(Array.isArray(arr) === false) throw new Error("'arr' parameter must be an instance of the Array!")
+    let resChanged = 0;
+    let mass = arr.map(item => item);
+    for (let i = 0; i < mass.length; i++){
+        if(mass[i] == '--double-prev'){
+            if(i - 1 == resChanged || i == 0) { 
+                mass.splice(i, 1);
+                i = i - 1;
+            } else if(i > 0){  
+                mass.splice(i, 1, mass[i - 1]);
+                resChanged = i;
             };
-        } else if (arr.includes('--discard-prev') || result.includes('--discard-prev') ){
-            let index = arr.indexOf('--discard-prev');
-            for(let i = 0; i < arr.length; i++){
-                if(i != index && i != index - 1){result.push(arr[i])};
-            };
-        } else if (arr.includes('--double-next') || result.includes('--double-next')){
-            let index = arr.indexOf('--double-next');
-            for(let i = 0; i < arr.length; i++){
-                if(i != index){
-                    result.push(arr[i]);
-                    if(i==index+1){
-                        result.push(arr[i]);
-                    };                
-                };
-            };
-        } else if (arr.includes('--double-prev') || result.includes('--double-prev')){
-            let index = arr.indexOf('--double-prev');
-            for(let i = 0; i < arr.length; i++){
-                if(i != index){
-                    result.push(arr[i]);
-                    if(i==index-1){
-                        result.push(arr[i]);
-                    };                
-                };
-            };
+        } else if(mass[i] == '--double-next') {
+            if(i !== resChanged.length - 1) { 
+                mass.splice(i, 1, mass[i + 1]);
+                resChanged = i;
+            } else {mass.splice(i, 1)};
+        } else if(mass[i] == '--discard-prev') {
+            if(i - 1 !== resChanged && i > 0) { 
+                mass.splice(i - 1, 2);
+            } else {mass.splice(i, 1)};
+        } else if(mass[i] == '--discard-next') {
+            if(i != mass.length - 1) { 
+                mass.splice(i, 2);
+                i = i - 1;
+                resChanged = i;
+            } else {mass.splice(i, 1)};
         };
-        return (mass = result);
     };
-    if(Array.isArray(arr) != true && (mass.includes('--discard-next') == false || mass.includes('--discard-prev') == false || mass.includes('--double-next') == false) && mass.includes(String) != true && mass.includes(Object) == false){ 
-        return [];
-    }  else {
-        find(arr);
-        while(mass.includes('--discard-next') || mass.includes('--discard-prev') || mass.includes('--double-next') || mass.includes('--double-prev')){
-            find(mass);
-        };
-        return mass;
-    }
-  
+    return mass;
 };
 
 module.exports = {

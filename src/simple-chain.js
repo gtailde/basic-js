@@ -4,38 +4,46 @@ const { NotImplementedError } = require('../extensions/index.js');
  * Implement chainMaker object according to task description
  * 
  */
-let chainRet = []
-const chainMaker = {
-  
 
+const chainMaker = {
+  chainRet: [],
   getLength() {
-    return chainRet.length
+    return this.chainRet.length;
   },
   addLink(value) {
       if(value === undefined){
-        chainRet.push('()')
+        this.chainRet.push('( )');
     }else{
-        chainRet.push(value);
+      this.chainRet.push(value);
     }
+    return this
   },
   removeLink(position) {
-    let arr = [];
-    let removedArr = chainRet.join(' ').replaceAll(position, '').split(' ')
-    for(let i = 0; i < removedArr.length; i++){
-        if(Number(removedArr[i]) || removedArr[i] == '()'){
-            arr.push(Number(removedArr[i]))
-            chainRet = arr;
-        }
+    if(!Number.isInteger(position) || position <= 0 || position >= this.chainRet.length){
+      this.chainRet = [];
+      throw new Error(`You can't remove incorrect link!`);
+    } else {
+      let arr = [];
+      let removedArr = this.chainRet.join(' ').replaceAll(position, '').split(' ')
+      for(let i = 0; i < removedArr.length; i++){
+        if(Number(removedArr[i]) || removedArr[i] == '( )'){
+          arr.push(Number(removedArr[i]))
+          this.chainRet = arr;
+        };
+      };
     }
+    return this
   },
+  
   reverseChain() {
-    chainRet.reverse()
+    this.chainRet.reverse();
+    return this
   },
   finishChain() {
-    answer = ''
-    for(let i = 0; i < chainRet.length; i++){
-        answer += `( ${chainRet[i]} )~~`
-    }
+    answer = '';
+    for(let i = 0; i < this.chainRet.length; i++){
+        answer += `( ${this.chainRet[i]} )~~`;
+    };
     return answer.slice(0, (answer.length-2));
   }
 };
