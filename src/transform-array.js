@@ -13,39 +13,26 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
- function transform(arr) {
-    if(Array.isArray(arr) === false) throw new Error("'arr' parameter must be an instance of the Array!")
-    let resChanged = 0;
-    let mass = arr.map(item => item);
-    for (let i = 0; i < mass.length; i++){
-        if(mass[i] == '--double-prev'){
-            if(i - 1 == resChanged || i == 0) { 
-                mass.splice(i, 1);
-                i = i - 1;
-            } else if(i > 0){  
-                mass.splice(i, 1, mass[i - 1]);
-                resChanged = i;
-            };
-        } else if(mass[i] == '--double-next') {
-            if(i !== resChanged.length - 1) { 
-                mass.splice(i, 1, mass[i + 1]);
-                resChanged = i;
-            } else {mass.splice(i, 1)};
-        } else if(mass[i] == '--discard-prev') {
-            if(i - 1 !== resChanged && i > 0) { 
-                mass.splice(i - 1, 2);
-            } else {mass.splice(i, 1)};
-        } else if(mass[i] == '--discard-next') {
-            if(i != mass.length - 1) { 
-                mass.splice(i, 2);
-                i = i - 1;
-                resChanged = i;
-            } else {mass.splice(i, 1)};
-        };
-    };
-    return mass;
-};
+function transform(arr) {
+    if (!Array.isArray(arr)) throw new Error("'arr' parameter must be an instance of the Array!");
 
+    const res = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === "--discard-next") {
+            i++;
+        } else if (arr[i] === "--discard-prev") {
+            if (res.length > 0 && arr[i - 2] !== "--discard-next") res.pop();
+        } else if (arr[i] === "--double-next") {
+            if (i < arr.length - 1)  res.push(arr[i + 1]);
+        } else if (arr[i] === "--double-prev") {
+            if (i > 0 && arr[i - 2] !== "--discard-next") res.push(arr[i - 1]);      
+        } else res.push(arr[i]);
+    }
+    return res;
+}
+  
+  
+  
 module.exports = {
   transform
 };

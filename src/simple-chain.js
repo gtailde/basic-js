@@ -6,46 +6,47 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 
 const chainMaker = {
-  chainRet: [],
+  chain: [],
+
   getLength() {
-    return this.chainRet.length;
+    // throw new NotImplementedError("Not implemented");
+    return this.chain.length;
   },
+
   addLink(value) {
-      if(value === undefined){
-        this.chainRet.push('( )');
-    }else{
-      this.chainRet.push(value);
+    // throw new NotImplementedError("Not implemented");
+    if (value === undefined) {
+      this.chain.push("(  )");
+    } else {
+      this.chain.push(`( ${value} )`);
     }
-    return this
+    return this;
   },
   removeLink(position) {
-    if(!Number.isInteger(position) || position <= 0 || position >= this.chainRet.length){
-      this.chainRet = [];
-      throw new Error(`You can't remove incorrect link!`);
-    } else {
-      let arr = [];
-      let removedArr = this.chainRet.join(' ').replaceAll(position, '').split(' ')
-      for(let i = 0; i < removedArr.length; i++){
-        if(Number(removedArr[i]) || removedArr[i] == '( )'){
-          arr.push(Number(removedArr[i]))
-          this.chainRet = arr;
-        };
-      };
+    // throw new NotImplementedError("Not implemented");
+    if (
+      !Number.isInteger(position) ||
+      position <= 0 ||
+      position > this.chain.length
+    ) {
+      this.chain = [];
+      throw new Error("You can't remove incorrect link!");
     }
-    return this
+    this.chain.splice(position - 1, 1);
+    return this;
   },
-  
+
   reverseChain() {
-    this.chainRet.reverse();
-    return this
+    // throw new NotImplementedError("Not implemented");
+    this.chain.reverse();
+    return this;
   },
   finishChain() {
-    answer = '';
-    for(let i = 0; i < this.chainRet.length; i++){
-        answer += `( ${this.chainRet[i]} )~~`;
-    };
-    return answer.slice(0, (answer.length-2));
-  }
+    // throw new NotImplementedError("Not implemented");
+    const result = this.chain.join("~~");
+    this.chain = [];
+    return result;
+  },
 };
 
 module.exports = {
